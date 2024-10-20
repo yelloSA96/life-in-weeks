@@ -11,18 +11,18 @@ import {
   ModalCloseButton,
   Button,
   Textarea,
-  Input
-} from '@chakra-ui/core';
-type Props = {
+  Input,
+  VStack
+} from '@chakra-ui/react';
+
+interface Props {
   startTime: number;
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (data: any) => void;
-};
+}
 
-export default function EventModal(props: Props) {
-  const { startTime, isOpen, onClose, onSubmit } = props;
-  // console.log('startTime', new Date(startTime), startTime);
+export default function EventModal({ startTime, isOpen, onClose, onSubmit }: Props) {
   const startDateStr = format(startTime, 'yyyy-MM-dd');
 
   const [selectedDateValue, setSelectedDateValue] = React.useState(startDateStr);
@@ -36,42 +36,45 @@ export default function EventModal(props: Props) {
       date: selectedDateValue,
       type: parseInt(type || '1')
     };
-    // console.log('event', event);
     onSubmit && onSubmit(event);
   };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay>
-        <ModalContent>
-          <ModalHeader>Add Event</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Add Event</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <VStack spacing={2}>
             <Input
               placeholder="Date"
               type="date"
               defaultValue={startDateStr}
-              onChange={(ev: any) => setSelectedDateValue(ev.target.value)}
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setSelectedDateValue(ev.target.value)}
             />
-            <Input placeholder="Title" mt={2} onChange={(ev: any) => setTitle(ev.target.value)} />
+            <Input
+              placeholder="Title"
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setTitle(ev.target.value)}
+            />
             <Textarea
               placeholder="Description"
-              mt={2}
               rows={4}
-              onChange={(ev: any) => setDescription(ev.target.value)}
+              onChange={(ev: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(ev.target.value)}
             />
-            <Input placeholder="Type (-3, -2, -1, 0, 1, 2, or 3)" onChange={(ev: any) => setType(ev.target.value)} />
-          </ModalBody>
+            <Input
+              placeholder="Type (-3, -2, -1, 0, 1, 2, or 3)"
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setType(ev.target.value)}
+            />
+          </VStack>
+        </ModalBody>
 
-          <ModalFooter>
-            {/* <Button variant="ghost" onClick={onClose}>
-              Close
-            </Button> */}
-            <Button colorScheme="teal" onClick={onClickSubmit}>
-              Add Event
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </ModalOverlay>
+        <ModalFooter>
+          <Button colorScheme="teal" onClick={onClickSubmit}>
+            Add Event
+          </Button>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   );
 }

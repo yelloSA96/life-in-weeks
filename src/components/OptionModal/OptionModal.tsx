@@ -3,70 +3,65 @@ import {
   Popover,
   PopoverCloseButton,
   PopoverTrigger,
-  // PopoverHeader,
   PopoverContent,
   PopoverArrow,
   PopoverBody,
   PopoverFooter,
   Box,
   Button,
-  // ButtonGroup,
-  Checkbox
-} from '@chakra-ui/core';
+  Checkbox,
+  VStack
+} from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { appState } from '../../utils/AppState';
 
 export default function OptionModal() {
-  const initialFocusRef = React.useRef();
+  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
   const [state, setState] = useRecoilState<any>(appState);
+
+  const updateOption = (optionName: string, value: boolean | number) => {
+    setState((prevState: any) => ({
+      ...prevState,
+      options: {
+        ...prevState.options,
+        [optionName]: value,
+      },
+    }));
+  };
+
   return (
     <Popover initialFocusRef={initialFocusRef} placement="bottom">
       <PopoverTrigger>
-        <Button size="sm" colorScheme="black" mr={3}>
+        <Button size="sm" colorScheme="gray" mr={3}>
           Options
         </Button>
       </PopoverTrigger>
       <PopoverContent color="white" bg="blue.800" borderColor="blue.800">
-        {/* <PopoverHeader pt={4} fontWeight="bold" border="0" fontSize="sm">
-          Options
-        </PopoverHeader> */}
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverBody fontSize="sm">
-          <Box mt={4} textAlign="left">
+          <VStack align="start" spacing={2} mt={4}>
             <Checkbox
-              defaultIsChecked={!!state.options.highlightYears}
-              onChange={(e) => {
-                const _state = { ...state };
-                _state.options = { ..._state.options, highlightYears: e.target.checked };
-                setState(_state);
-              }}
+              isChecked={!!state.options.highlightYears}
+              onChange={(e) => updateOption('highlightYears', e.target.checked)}
             >
               Highlight every year
             </Checkbox>
             <Checkbox
-              defaultIsChecked={!!state.options.showEveryYears}
-              onChange={(e) => {
-                const _state = { ...state };
-                _state.options = { ..._state.options, showEveryYears: e.target.checked ? 5 : 0 };
-                setState(_state);
-              }}
+              isChecked={!!state.options.showEveryYears}
+              onChange={(e) => updateOption('showEveryYears', e.target.checked ? 5 : 0)}
             >
               Show year numbers
             </Checkbox>
             <Checkbox
-              defaultIsChecked={!!state.options.oneRowOneYear}
-              onChange={(e) => {
-                const _state = { ...state };
-                _state.options = { ..._state.options, oneRowOneYear: e.target.checked };
-                setState(_state);
-              }}
+              isChecked={!!state.options.oneRowOneYear}
+              onChange={(e) => updateOption('oneRowOneYear', e.target.checked)}
             >
               One row is one year
             </Checkbox>
-          </Box>
+          </VStack>
         </PopoverBody>
-        <PopoverFooter border="0" d="flex" alignItems="center" justifyContent="space-between" pb={4}></PopoverFooter>
+        <PopoverFooter border="0" display="flex" alignItems="center" justifyContent="space-between" pb={4} />
       </PopoverContent>
     </Popover>
   );

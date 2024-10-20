@@ -3,19 +3,16 @@ import ReactDOM from 'react-dom';
 import LogRocket from 'logrocket';
 
 import { RecoilRoot } from 'recoil';
-import { ChakraProvider } from '@chakra-ui/core';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { theme } from '@chakra-ui/core';
-import { merge } from '@chakra-ui/utils';
-
 LogRocket.init('9aapdz/life-calendar');
 
-// 2. Extend the theme to include custom colors, fonts, etc.
-const customTheme = merge(theme, {
+// Extend the theme to include custom colors, fonts, etc.
+const customTheme = extendTheme({
   colors: {
     brand: {
       900: '#1a365d',
@@ -40,6 +37,7 @@ const DefaultDataStr = `
         }
     ]
 }`.trim();
+
 let dataStr = localStorage.getItem('data');
 
 let dataFromUrl = window.location.search.split('data=')[1];
@@ -54,9 +52,9 @@ if (dataFromUrl && dataFromUrl.length > 10) {
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider resetCSS theme={customTheme}>
+    <ChakraProvider theme={customTheme}>
       <RecoilRoot>
-        <App dataString={dataStr} />
+        <App dataString={dataStr || ''} />
       </RecoilRoot>
     </ChakraProvider>
   </React.StrictMode>,

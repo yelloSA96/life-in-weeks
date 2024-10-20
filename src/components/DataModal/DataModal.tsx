@@ -11,21 +11,22 @@ import {
   Textarea,
   Box,
   Tooltip
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { format } from 'date-fns';
+
+interface DataModalProps {
+  dataString: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: any) => void;
+}
 
 export default function DataModal({
   dataString,
   isOpen,
   onClose,
   onSubmit
-}: {
-  dataString: string;
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit?: (data: any) => void;
-}) {
-  // const [data, setData] = React.useState<string>(dataString);
+}: DataModalProps) {
   const [text, setText] = React.useState<string>(dataString);
 
   const onClickAdd = () => {
@@ -62,34 +63,33 @@ export default function DataModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay>
-        <ModalContent>
-          <ModalHeader>Events</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Box mb={4}>"type" can have -3, -2, -1, 0, 1, 2 or 3 (sad-to-happy point)</Box>
-            <Textarea rows={20} onChange={(ev: any) => setText(ev.target.value)} value={text} />
-          </ModalBody>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Events</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box mb={4}>"type" can have -3, -2, -1, 0, 1, 2 or 3 (sad-to-happy point)</Box>
+          <Textarea rows={20} onChange={(ev: React.ChangeEvent<HTMLTextAreaElement>) => setText(ev.target.value)} value={text} />
+        </ModalBody>
 
-          <ModalFooter>
-            <Box>
-              <Button colorScheme="gray" onClick={onClickAdd}>
-                ＋ Add Event
+        <ModalFooter>
+          <Box>
+            <Button colorScheme="gray" onClick={onClickAdd}>
+              ＋ Add Event
+            </Button>
+          </Box>
+          <Box width="100%" textAlign="right">
+            <Tooltip label="Create a 'shareable URL' and open it">
+              <Button colorScheme="gray" onClick={onClickShare} mr={3}>
+                Share
               </Button>
-            </Box>
-            <Box width="100%" textAlign="right">
-              <Tooltip label="Create a 'shareable URL' and open it">
-                <Button colorScheme="gray" onClick={onClickShare} mr={3}>
-                  Share
-                </Button>
-              </Tooltip>
-              <Button colorScheme="teal" onClick={onClickApply}>
-                Apply
-              </Button>
-            </Box>
-          </ModalFooter>
-        </ModalContent>
-      </ModalOverlay>
+            </Tooltip>
+            <Button colorScheme="teal" onClick={onClickApply}>
+              Apply
+            </Button>
+          </Box>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   );
 }

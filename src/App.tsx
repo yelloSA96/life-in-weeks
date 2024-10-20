@@ -1,14 +1,17 @@
 import React from 'react';
-import { useToast, Button, Flex, Box, useDisclosure } from '@chakra-ui/core';
+import { useToast, Button, Flex, Box, useDisclosure } from '@chakra-ui/react';
 
 import WeekTimeline from './components/WeekTimeline/WeekTimeline';
 import DataModal from './components/DataModal/DataModal';
 import OptionModal from './components/OptionModal/OptionModal';
 
-// import logo from './logo.svg';
 import './App.css';
 
-function App({ dataString }: { dataString: string }) {
+interface AppProps {
+  dataString: string;
+}
+
+function App({ dataString }: AppProps) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = React.useState(JSON.parse(dataString));
@@ -26,12 +29,11 @@ function App({ dataString }: { dataString: string }) {
         isClosable: true
       });
     }
-  }, []);
+  }, [toast]);
 
   return (
     <div className="App">
       <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <Flex m={2} ml={20} justifyContent="space-between" w="100%">
           <h1>
             Life Calendar: Your Life in Weeks{' '}
@@ -58,7 +60,6 @@ function App({ dataString }: { dataString: string }) {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={(dataJson: any) => {
-              // console.log('onSubmit - dataJson', dataJson);
               onClose();
               setData(dataJson);
               toast({

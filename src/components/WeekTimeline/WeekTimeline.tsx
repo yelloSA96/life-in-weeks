@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Box, Tooltip, useToast } from '@chakra-ui/core';
+import { Flex, Box, Tooltip, useToast } from '@chakra-ui/react';
 import EventModal from '../EventModal/EventModal';
 
 import { getYear, isLeapYear, parse, differenceInWeeks, format, addWeeks } from 'date-fns';
@@ -14,7 +14,7 @@ const DefaultData = {
 const parseDate = (dateStr: string) => parse(dateStr, 'yyyy-MM-dd', new Date());
 
 // transform "data" object to add more information like: _date, _weeknum, etc.
-const transformData = (data: any = { events: [] }) => {
+const transformData = (data: any = { events: [] }): [any, number[]] => {
   const _data = JSON.parse(JSON.stringify(data));
 
   let firstEvent: any = {
@@ -45,7 +45,7 @@ const transformData = (data: any = { events: [] }) => {
   });
 
   const firstYear = getYear(firstEvent._date);
-  let markedWeeks = []; // highlighted boxes - [0, 52, 104, ...] for 90 years
+  let markedWeeks: number[] = []; // highlighted boxes - [0, 52, 104, ...] for 90 years
   let weeks = 0;
   for (let i = 0; i < 90; i += 1) {
     const year = firstYear + i;
@@ -55,58 +55,21 @@ const transformData = (data: any = { events: [] }) => {
     // adjust for better alignment (because of Math.round and leap years)
     markedWeek++;
     if (
-      [
-        4,
-        5,
-        6,
-        11,
-        12,
-        13,
-        18,
-        19,
-        20,
-        25,
-        26,
-        27,
-        32,
-        33,
-        34,
-        39,
-        40,
-        41,
-        46,
-        47,
-        48,
-        53,
-        54,
-        55,
-        60,
-        61,
-        62,
-        67,
-        68,
-        69,
-        74,
-        75,
-        76,
-        81,
-        82,
-        83,
-        88,
-        89,
-        90
-      ].indexOf(i + 1) >= 0
+      [4,5,6,11,12,13,18,19,20,25,26,27,32,33,34,39,40,41,46,47,48,53,54,55,60,61,62,67,68,69,74,75,76,81,82,83,88,89,90].indexOf(i + 1) >= 0
     ) {
       markedWeek = markedWeek - 1;
     }
-    markedWeeks.push(markedWeek); // TODO: rounding leads to inaccurate box position
+    markedWeeks.push(markedWeek);
   }
-  // console.log('markedWeeks', markedWeeks);
 
   return [_data, markedWeeks];
 };
 
-export default function WeekTimeline({ data }: { data: any }) {
+interface WeekTimelineProps {
+  data: any;
+}
+
+export default function WeekTimeline({ data }: WeekTimelineProps) {
   const toast = useToast();
   const [mainKey, setMainKey] = React.useState(Math.random());
   const [eventModalOpen, setEventModalOpen] = React.useState(-1);
@@ -137,7 +100,6 @@ export default function WeekTimeline({ data }: { data: any }) {
           const markedWeeksIdx = markedWeeks.indexOf(idx);
 
           if (state.options.highlightYears) {
-            // bgColor = item % 261 === 0 ? '#335' : bgColor; // highlight every year
             bgColor = markedWeeksIdx >= 0 ? '#224' : bgColor;
             yearTooltip = markedWeeksIdx >= 0 ? `${markedWeeksIdx + 1} years old` : yearTooltip;
           }
@@ -158,14 +120,10 @@ export default function WeekTimeline({ data }: { data: any }) {
           }
           let boxContent = '';
           if (state.options.showEveryYears) {
-            // 52.143 * 5 ~ 260.7 ~ 261
-            // boxContent = '' + (item % 261 === 0 ? (item / 261) * 5 : ''); // show year number ever N years
             boxContent = '' + (markedWeeksIdx > 1 && (markedWeeksIdx + 1) % 5 === 0 ? markedWeeksIdx + 1 : '');
             yearTooltip = boxContent ? `${boxContent} years old` : yearTooltip;
           }
 
-          // boxContent = obj ? obj.title : boxContent; // item % 52 === 0 ? item / 52 : ''
-          // if first character is Emoji, show it in the box:
           boxContent = obj && obj.title && obj.title.trim().charCodeAt(0) > 255 ? [...obj.title.trim()][0] : boxContent;
 
           let boxStartTime = +addWeeks(_data.events[0]._date, idx);
@@ -197,12 +155,13 @@ export default function WeekTimeline({ data }: { data: any }) {
       </>
     );
   };
+
   return (
-    <Flex key={mainKey} gridGap={1} width="95vw" flexWrap="wrap">
+    <Flex key={mainKey} gap={1} width="95vw" flexWrap="wrap">
       {state.options.oneRowOneYear === true
         ? years.map((_, yearIdx) => {
             return (
-              <Flex key={`flex_${yearIdx}`} gridGap={1} width="95vw" flexWrap="wrap">
+              <Flex key={`flex_${yearIdx}`} gap={1} width="95vw" flexWrap="wrap">
                 {renderBoxes(yearIdx)}
               </Flex>
             );
