@@ -8,7 +8,7 @@ import { appState } from '../../utils/AppState';
 import css from './WeekTimeline.module.css';
 
 const DefaultData = {
-  events: [{ type: 1, date: '1982-01-01', title: 'My birthday' }]
+  events: [{ type: 1, date: '1996-01-01', title: 'My birthday' }]
 };
 
 const parseDate = (dateStr: string) => parse(dateStr, 'yyyy-MM-dd', new Date());
@@ -100,7 +100,7 @@ export default function WeekTimeline({ data }: WeekTimelineProps) {
           const markedWeeksIdx = markedWeeks.indexOf(idx);
 
           if (state.options.highlightYears) {
-            bgColor = markedWeeksIdx >= 0 ? '#224' : bgColor;
+            bgColor = markedWeeksIdx >= 0 ? '#110' : bgColor;
             yearTooltip = markedWeeksIdx >= 0 ? `${markedWeeksIdx + 1} years old` : yearTooltip;
           }
 

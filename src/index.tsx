@@ -27,7 +27,7 @@ const DefaultDataStr = `
     "events": [
         {
             "type": 1,
-            "date": "1982-01-01",
+            "date": "1996-01-01",
             "title": "👶 I was born"
         },
         {
