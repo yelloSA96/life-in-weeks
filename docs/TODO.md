@@ -1,4 +1,4 @@
-# Life Calendar: Your Life in Weeks
+**# Life Calendar: Your Life in Weeks
 
 Roadmap / Todo List
 
@@ -10,6 +10,7 @@ Roadmap / Todo List
 - [ ] multiple events in 1 box  
 - [ ] edit an existing event  
 - [ ] handle description  
+- [ ] Mobile Optimised
 
 ### In Progress
 
@@ -20,5 +21,5 @@ Roadmap / Todo List
 - [x] new layout: one row one year  
 - [x] click on a box to add  
 - [x] use localStorage  
-- [x] show Emoji icon  
+- [x] show Emoji icon**  
 
